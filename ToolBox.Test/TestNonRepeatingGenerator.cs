@@ -17,7 +17,7 @@ namespace ToolBox.Test
             for (int i = 0; i < 1000000; ++i)
             {
                 var list = Sequence.BobFloydNonRepeatingSequence(0, 15, 4).ToList();
-                Assert.IsFalse(new[] { 12, 13, 14, 15 }.Contains(list[0]));
+                Assert.IsFalse(new[] {13, 14, 15 }.Contains(list[0]));
                 Assert.AreEqual(4, list.Count);
             }
         }
@@ -42,7 +42,7 @@ namespace ToolBox.Test
         [Test]
         public void TestBobFloydWithShuffleRandomness()
         {
-            TestRandomness(() => Sequence.NonRepeatingRandomSequence(0, 16, 4).ToList(), 16, 4);
+            TestRandomness(() => Sequence.NonRepeatingRandomSequence(0, 15, 4).ToList(), 16, 4);
         }
 
         [Test]
@@ -54,16 +54,16 @@ namespace ToolBox.Test
 
         public void TestRandomness(Func<List<int>> getRandomList, int rangeLength, int count)
         {
-            long combinations = (long)rangeLength.Factorial(rangeLength - count + 1);
-            long iterations = combinations * 100;
-            ConcurrentDictionary<long, int> ocurrences = new ConcurrentDictionary<long, int>(Environment.ProcessorCount, (int)combinations);
+            var combinations = rangeLength.Factorial(rangeLength - count + 1);
+            var iterations = combinations * 100;
+            var ocurrences = new ConcurrentDictionary<long, int>(Environment.ProcessorCount, (int)combinations);
 
-            var partitioner = Partitioner.Create(0, iterations);
+            var partitioner = Partitioner.Create(0, (long)iterations);
             Parallel.ForEach(partitioner, new ParallelOptions() {MaxDegreeOfParallelism = Environment.ProcessorCount},
                 range =>
                 {
                     //hopefully having a private dictionary will help concurrency
-                    Dictionary<long, int> privateOcurrences = new Dictionary<long, int>();
+                    var privateOcurrences = new Dictionary<long, int>();
                     for (long i = range.Item1; i < range.Item2; ++i)
                     {
                         var list = getRandomList();

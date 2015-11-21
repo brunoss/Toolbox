@@ -24,21 +24,21 @@ namespace ToolBox
 
     internal class NonRepeatingListWithArray : List<int>, INonRepeatingList
     {
-        private readonly BitArray inList;
-        private readonly int min;
+        private readonly BitArray _inList;
+        private readonly int _min;
 
         public NonRepeatingListWithArray(int min, int max)
         {
-            this.inList = new BitArray(max-min+1);
-            this.min = min;
+            _inList = new BitArray(max-min+1);
+            _min = min;
         }
 
         bool INonRepeatingList.Add(int value)
         {
-            if (!this.inList[value - this.min])
+            if (!_inList[value - _min])
             {
-                this.Add(value);
-                this.inList[value - this.min] = true;
+                Add(value);
+                _inList[value - _min] = true;
                 return true;
             }
             return false;
@@ -47,12 +47,11 @@ namespace ToolBox
 
     internal class NonRepeatingListWithSet : List<int>, INonRepeatingList
     {
-        private readonly HashSet<int> mapValue = new HashSet<int>();
-        private int currentIndex = 0;
+        private readonly HashSet<int> _mapValue = new HashSet<int>();
 
         bool INonRepeatingList.Add(int value)
         {
-            if (mapValue.Add(value))
+            if (_mapValue.Add(value))
             {
                 base.Add(value);
                 return true;

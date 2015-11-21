@@ -11,7 +11,7 @@ namespace ToolBox
         {
             if (selector == null)
             {
-                throw new ArgumentNullException("selector");
+                throw new ArgumentNullException(nameof(selector));
             }
             _selector = selector;
         }
@@ -36,14 +36,7 @@ namespace ToolBox
             }
             var xProps = _selector(x);
             var yProps = _selector(y);
-            for (int i = 0; i < xProps.Count; ++i)
-            {
-                if (xProps[i].CompareTo(yProps[i]) != 0)
-                {
-                    return false;
-                }
-            }
-            return true;
+            return !xProps.Where((t, i) => t.CompareTo(yProps[i]) != 0).Any();
         }
 
         public int GetHashCode(T obj)
