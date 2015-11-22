@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestOrderedGroup.cs" />
     <Compile Include="TestComparer.cs" />
     <Compile Include="TestMath.cs" />
     <Compile Include="TestNonRepeatingGenerator.cs" />

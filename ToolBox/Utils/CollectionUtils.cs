@@ -95,16 +95,12 @@ namespace ToolBox
                 {
                     var field = idSelector(it.Current);
                     var list = new List<T>();
+                    list.Add(it.Current);
                     while (true)
                     {
-                        var previous = it.Current;
                         if (!it.MoveNext())
                         {
-                            list.Add(previous);
                             yield return list;
-                        }
-                        else
-                        {
                             yield break;
                         }
                         if (idSelector(it.Current).CompareTo(field) == 0)
@@ -114,7 +110,7 @@ namespace ToolBox
                         else
                         {
                             yield return list;
-                            list.Clear();
+                            list = new List<T>();
                             list.Add(it.Current);
                             field = idSelector(it.Current);
                         }
