@@ -119,7 +119,7 @@ namespace ToolBox
             }
         }
 
-        static readonly ThreadLocal<Random> Random = new ThreadLocal<Random>(()=>new Random());
+        private static readonly ThreadLocal<Random> Random = new ThreadLocal<Random>(()=>new Random());
         public static IList<T> Shuffle<T>(this IEnumerable<T> col)
         {
             var list = col as IList<T> ?? col.ToList();

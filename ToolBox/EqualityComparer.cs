@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ToolBox
 {
-    public class EqualityComparer<T> : IEqualityComparer<T>
+    public class EqualityComparer<T> : IEqualityComparer<T> where T:class
     {
         private readonly Func<T, IList<IComparable>> _selector;
         public EqualityComparer(Func<T, IList<IComparable>> selector)
@@ -26,6 +26,10 @@ namespace ToolBox
 
         public bool Equals(T x, T y)
         {
+            if (ReferenceEquals(x, y))
+            {
+                return true;
+            }
             if (x == null)
             {
                 return false;

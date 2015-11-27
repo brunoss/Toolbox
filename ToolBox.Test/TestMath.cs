@@ -19,6 +19,7 @@ namespace ToolBox.Test
         [Test]
         public void TestMaxFactorial()
         {
+            Assert.AreEqual(13, 13.Factorial(13));
             Assert.AreEqual(13*12*11, 13.Factorial(11));
         }
 

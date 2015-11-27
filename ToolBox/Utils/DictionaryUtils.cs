@@ -35,18 +35,18 @@ namespace ToolBox
 
         public static V GetEntry<V>(this IDictionary<Type, V> dictionary, Type key, bool verifyInterfaces = false)
         {
+            if (verifyInterfaces)
+            {
+                var interfaces = key.GetTypeInfo().ImplementedInterfaces.ToArray();
+                var entry = dictionary.Keys.ContainsOneOf(interfaces);
+                if (entry != null)
+                {
+                    return dictionary[entry];
+                }
+            }
             for (; key != null; key = key.BaseType)
             {
                 V value;
-                if (verifyInterfaces)
-                {
-                    var interfaces = key.GetTypeInfo().ImplementedInterfaces.ToArray();
-                    var entry = dictionary.Keys.ContainsOneOf(interfaces);
-                    if (entry != null)
-                    {
-                        return dictionary[entry];
-                    }
-                }
                 if (dictionary.TryGetValue(key, out value))
                 {
                     return value;

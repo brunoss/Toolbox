@@ -45,6 +45,7 @@
     <Compile Include="MV\Model.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Utils\CollectionUtils.cs" />
+    <Compile Include="Utils\DateUtils.cs" />
     <Compile Include="Utils\DictionaryUtils.cs" />
     <Compile Include="EqualityComparer.cs" />
     <Compile Include="Utils\MathUtils.cs" />
