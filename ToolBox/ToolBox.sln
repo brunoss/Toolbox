@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Performance1.psess = Performance1.psess
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolbox.Rbac", "Toolbox.Rbac\Toolbox.Rbac.csproj", "{2BAE05CF-C06B-467A-8ED1-6F1C7C0023ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{29D15E8D-0E02-4249-832A-7C1C079431D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29D15E8D-0E02-4249-832A-7C1C079431D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29D15E8D-0E02-4249-832A-7C1C079431D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BAE05CF-C06B-467A-8ED1-6F1C7C0023ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BAE05CF-C06B-467A-8ED1-6F1C7C0023ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BAE05CF-C06B-467A-8ED1-6F1C7C0023ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BAE05CF-C06B-467A-8ED1-6F1C7C0023ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

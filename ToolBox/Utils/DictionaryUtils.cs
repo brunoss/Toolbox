@@ -15,6 +15,14 @@ namespace ToolBox
             return value;
         }
 
+        public static V TryGetOrEmpty<K, V>(this IDictionary<K, V> dictionary, K key)
+        {
+            V ret;
+            if (dictionary.TryGetValue(key, out ret))
+                return ret;
+            return default(V);
+        }
+
         public static V TryGetOrAdd<K, V>(this IDictionary<K, V> dictionary, K key, V value)
         {
             V ret;

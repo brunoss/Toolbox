@@ -22,29 +22,31 @@ namespace ToolBox.Test
             }
         }
 
+        private DateTime Today = DateTime.Today;
         [Test]
         public void TestNextWeekDay()
         {
-            Assert.AreEqual(DateTime.Today, DateTime.Today.NextWeekDay(DateTime.Today.DayOfWeek, true));
-            Assert.AreEqual(DateTime.Today.AddDays(7), DateTime.Today.NextWeekDay(DateTime.Today.DayOfWeek));
+            
+            Assert.AreEqual(Today, DateTime.Today.NextWeekDay(Today.DayOfWeek, true));
+            Assert.AreEqual(Today.AddDays(7), DateTime.Today.NextWeekDay(Today.DayOfWeek));
         }
 
         [Test]
         public void TestAge()
         {
-            var elapsed = DateTime.Today - DateTime.Today;
+            var elapsed = Today - Today;
             Assert.AreEqual(0, elapsed.Years());
             Assert.AreEqual(0, elapsed.Months());
 
-            elapsed = DateTime.Today.AddDays(35) - DateTime.Today;
+            elapsed = Today.AddDays(35) - Today;
             Assert.AreEqual(0, elapsed.Years());
             Assert.AreEqual(1, elapsed.Months());
 
-            elapsed = DateTime.Today.AddDays(69) - DateTime.Today;
+            elapsed = Today.AddDays(69) - Today;
             Assert.AreEqual(0, elapsed.Years());
             Assert.AreEqual(2, elapsed.Months());
 
-            elapsed = DateTime.Today.AddDays(369) - DateTime.Today;
+            elapsed = Today.AddDays(369) - Today;
             Assert.AreEqual(1, elapsed.Years());
             Assert.AreEqual(0, elapsed.Months());
         }
