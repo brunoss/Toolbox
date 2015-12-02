@@ -11,7 +11,7 @@ namespace ToolBox.Test
 {
     public class Principal : IPrincipal, IIdentity
     {
-        private HashSet<string> _roles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        private readonly HashSet<string> _roles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         public IIdentity Identity
         {
             get
@@ -35,11 +35,12 @@ namespace ToolBox.Test
     [TestFixture]
     public class TestSimpleRbac
     {
-        private Dictionary<string, IPrincipal> Users = new Dictionary<string, IPrincipal>(); 
+        private Dictionary<string, IPrincipal> Users;
         private Rbac _rbac;
         [SetUp]
         public void Init()
         {
+            Users = new Dictionary<string, IPrincipal>();
             Users.Add("owner", new Principal()
             {
                 Roles = {"owner", "member", "user"}
@@ -78,6 +79,39 @@ namespace ToolBox.Test
             Assert.IsTrue(_rbac.Is.User(Users["user"]).A("user").Result);
             Assert.IsFalse(_rbac.Is.User(Users["user"]).A("member").Result);
             Assert.IsTrue(_rbac.Is.User(Users["Bob"]).A("mantainer").Result);
+        }
+
+        [Test]
+        public void TestCanDo()
+        {
+            Assert.IsTrue(_rbac.Can.User(Users["owner"]).Do("Delete").Result);
+            Assert.IsTrue(_rbac.Can.User(Users["owner"]).Do("transfer").Result);
+            Assert.IsTrue(_rbac.Can.User(Users["owner"]).Do("comment").Result);
+            Assert.IsTrue(_rbac.Can.User(Users["owner"]).Do("Create").Result);
+            Assert.IsFalse(_rbac.Can.User(Users["owner"]).Do("Maintnance").Result);
+
+            Assert.IsTrue(_rbac.Can.User(Users["member"]).Do("Create").Result);
+            Assert.IsTrue(_rbac.Can.User(Users["member"]).Do("read").Result);
+            
+            Assert.IsTrue(_rbac.Can.User(Users["user"]).Do("read").Result);
+            Assert.IsFalse(_rbac.Can.User(Users["user"]).Do("Delete").Result);
+            Assert.IsFalse(_rbac.Can.User(Users["user"]).Do("transfer").Result);
+
+            Assert.IsTrue(_rbac.Can.User(Users["Bob"]).Do("Maintnance").Result);
+        }
+
+        [Test]
+        public void TestCanUserDo()
+        {
+            var actions = new [] {"Read", "Transfer", "Delete", "Comment", "Create"};
+            Assert.IsTrue(_rbac.What.Can.User.Do(Users["owner"]).ToList().All(a => actions.Contains(a)));
+        }
+
+        [Test]
+        public void TestCanRoleDo()
+        {
+            var actions = new[] { "Read", "Transfer", "Delete", "Comment", "Create" };
+            Assert.IsTrue(_rbac.What.Can.Role.Do("owner").ToList().All(a => actions.Contains(a)));
         }
     }
 }

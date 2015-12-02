@@ -83,7 +83,7 @@ namespace Toolbox.Rbac
                 internal _Can(IRbacSession session)
                 {
                     Role = new _Role(session);
-
+                    User = new _User(session);
                 }
                 public _Role Role { get; private set; }
                 public class _Role
