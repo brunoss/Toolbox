@@ -7,8 +7,8 @@ namespace Toolbox.Rbac
 {
     public class SimpleRbacSession : IRbacSession
     {
-        private readonly IDictionary<string, Predicate<IPrincipal>> _userRoles;
-        private readonly ICollection<Role> _rolePermissions;
+        protected readonly IDictionary<string, Predicate<IPrincipal>> _userRoles;
+        protected readonly ICollection<Role> _rolePermissions;
         private SimpleRbacQuery _query;
         public IRbacQuery Query
         {

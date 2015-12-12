@@ -18,7 +18,7 @@ namespace ToolBox
 
         public EqualityComparer(params Func<T, IComparable>[] props)
         {
-            _selector = (elem) =>
+            _selector = elem =>
             {
                 return props.Select(p => p(elem)).ToArray();
             };

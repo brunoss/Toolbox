@@ -59,7 +59,7 @@ namespace ToolBox.Test
             var ocurrences = new ConcurrentDictionary<long, int>(Environment.ProcessorCount, (int)combinations);
 
             var partitioner = Partitioner.Create(0, (long)iterations);
-            Parallel.ForEach(partitioner, new ParallelOptions() {MaxDegreeOfParallelism = Environment.ProcessorCount},
+            Parallel.ForEach(partitioner, new ParallelOptions {MaxDegreeOfParallelism = Environment.ProcessorCount},
                 range =>
                 {
                     //hopefully having a private dictionary will help concurrency

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using ToolBox.Utils;
 
@@ -22,31 +19,31 @@ namespace ToolBox.Test
             }
         }
 
-        private DateTime Today = DateTime.Today;
+        private DateTime _today = DateTime.Today;
         [Test]
         public void TestNextWeekDay()
         {
             
-            Assert.AreEqual(Today, DateTime.Today.NextWeekDay(Today.DayOfWeek, true));
-            Assert.AreEqual(Today.AddDays(7), DateTime.Today.NextWeekDay(Today.DayOfWeek));
+            Assert.AreEqual(_today, DateTime.Today.NextWeekDay(_today.DayOfWeek, true));
+            Assert.AreEqual(_today.AddDays(7), DateTime.Today.NextWeekDay(_today.DayOfWeek));
         }
 
         [Test]
         public void TestAge()
         {
-            var elapsed = Today - Today;
+            var elapsed = _today - _today;
             Assert.AreEqual(0, elapsed.Years());
             Assert.AreEqual(0, elapsed.Months());
 
-            elapsed = Today.AddDays(35) - Today;
+            elapsed = _today.AddDays(35) - _today;
             Assert.AreEqual(0, elapsed.Years());
             Assert.AreEqual(1, elapsed.Months());
 
-            elapsed = Today.AddDays(69) - Today;
+            elapsed = _today.AddDays(69) - _today;
             Assert.AreEqual(0, elapsed.Years());
             Assert.AreEqual(2, elapsed.Months());
 
-            elapsed = Today.AddDays(369) - Today;
+            elapsed = _today.AddDays(369) - _today;
             Assert.AreEqual(1, elapsed.Years());
             Assert.AreEqual(0, elapsed.Months());
         }

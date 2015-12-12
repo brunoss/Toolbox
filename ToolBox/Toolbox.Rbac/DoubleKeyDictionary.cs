@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Toolbox.Rbac
 {
@@ -11,7 +7,7 @@ namespace Toolbox.Rbac
         private IEqualityComparer<K2> keyComparer;
         public DoubleKeyDictionary(IEqualityComparer<K1> key1Comparer, IEqualityComparer<K2> key2Comparer) : base(key1Comparer)
         {
-            this.keyComparer = key2Comparer;
+            keyComparer = key2Comparer;
         }
         public DoubleKeyDictionary() { }
         public V this[K1 key1, K2 key2]

@@ -17,9 +17,9 @@ namespace ToolBox.Test
         [Test]
         public void SingleElement()
         {
-            var users = new List<User>()
+            var users = new List<User>
             {
-                new User()
+                new User
                 {
                     ID = 1,
                     Name = "Bruno Costa",
@@ -34,14 +34,14 @@ namespace ToolBox.Test
         [Test]
         public void GroupsAUser()
         {
-            var users = new List<User>()
+            var users = new List<User>
             {
-                new User()
+                new User
                 {
                     ID = 1,
                     Name = "Bruno Costa",
                     Role = "Admin"
-                },new User()
+                },new User
                 {
                     ID = 1,
                     Name = "Bruno Costa",
@@ -60,29 +60,29 @@ namespace ToolBox.Test
         [Test]
         public void GroupsMultiUsers()
         {
-            var users = new List<User>()
+            var users = new List<User>
             {
-                new User()
+                new User
                 {
                     ID = 1,
                     Name = "Bruno Costa",
                     Role = "Admin"
-                },new User()
+                },new User
                 {
                     ID = 1,
                     Name = "Bruno Costa",
                     Role = "Developper"
-                },new User()
+                },new User
                 {
                     ID = 2,
                     Name = "Ordered Group",
                     Role = "Method"
-                },new User()
+                },new User
                 {
                     ID = 2,
                     Name = "Ordered Group",
                     Role = "Elite"
-                },
+                }
             };
             var roles = users.OrderedGroup(u => u.ID)
                 .Select(group => string.Join(" ", group.Select(u => u.Role)))

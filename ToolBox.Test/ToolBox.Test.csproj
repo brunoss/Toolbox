@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestSpecializedRbac.cs" />
     <Compile Include="TestOrderedGroup.cs" />
     <Compile Include="TestComparer.cs" />
     <Compile Include="TestMath.cs" />

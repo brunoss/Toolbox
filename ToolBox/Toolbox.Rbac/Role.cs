@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Toolbox.Rbac
 {
@@ -10,8 +7,8 @@ namespace Toolbox.Rbac
     {
         public Role(string name)
         {
-            this.Name = name;
-            this.Actions = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
+            Name = name;
+            Actions = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
         }
         public string Name { get; private set; }
 

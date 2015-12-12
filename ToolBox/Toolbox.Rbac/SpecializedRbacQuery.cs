@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using ToolBox;
@@ -22,28 +23,31 @@ namespace Toolbox.Rbac
             var userRoles = Session.UserRolesForType.TryGetOrEmpty(typeof(T));
             if (userRoles == null)
             {
-                return Enumerable.Empty<string>();
+                return base.GetUserRoles(user);
             }
-            return userRoles(user, resource);
+            return base.GetUserRoles(user).Union(userRoles(user, resource));
         }
 
         public virtual bool IsUserInRole<T>(IPrincipal user, string role, T resource)
         {
-            return GetUserRoles(user, resource).Contains(role);
+            return user.IsInRole(role) || 
+                GetUserRoles(user, resource).Contains(role, StringComparer.OrdinalIgnoreCase);
         }
 
         public virtual IEnumerable<string> GetUserPermissions<T>(IPrincipal user, T resource)
         {
-            if (!Session.UserPermissions.ContainsKey(typeof(T)))
+            var userRoles = Session.UserRolesForType.TryGetOrEmpty(typeof(T));
+            if (userRoles == null)
             {
-                return Enumerable.Empty<string>();
+                return base.GetUserPermissions(user);
             }
-            return Session.UserPermissions[typeof(T)](user, resource);
+            return userRoles(user, resource).Union(session.Query.GetUserPermissions(user));
         }
 
         public virtual bool IsUserAbleTo<T>(IPrincipal user, string action, T resource)
         {
-            return GetUserPermissions(user, resource).Contains(action);
+            return GetUserRoles(user, resource).Any(r => IsUserInRole(user, r, resource)) ||
+            GetUserPermissions(user, resource).Contains(action, StringComparer.OrdinalIgnoreCase);
         }
     }
 }

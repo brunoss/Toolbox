@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -166,13 +165,13 @@ namespace ToolBox
             }
             decimal mean = acc/count;
             decimal variance = 0;
-            Statistics stats = new Statistics()
+            Statistics stats = new Statistics
             {
                 Count = count,
                 Max = max,
                 Min = min,
                 Sum = acc,
-                Mean = mean,
+                Mean = mean
             };
             foreach (var value in values)
             {
