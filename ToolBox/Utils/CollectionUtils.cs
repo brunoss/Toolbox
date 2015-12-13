@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace ToolBox
@@ -122,7 +123,7 @@ namespace ToolBox
         public static IList<T> Shuffle<T>(this IEnumerable<T> col)
         {
             var list = col as IList<T> ?? col.ToList();
-            Random random = Random.Value;
+            var random = Random.Value;
             for (int i = 0; i < list.Count; ++i)
             {
                 //get a chance of staying in same place
@@ -131,12 +132,19 @@ namespace ToolBox
             return list;
         }
 
-        public static void Swap<T>(this IEnumerable<T> col, int idxSrc, int idxDest)
+        public static void Swap<T>(this IList<T> col, int idxSrc, int idxDest)
         {
-            var list = col as IList<T> ?? col.ToList();
-            T aux = list[idxSrc];
-            list[idxSrc] = list[idxDest];
-            list[idxDest] = aux;
+            var aux = col[idxSrc];
+            col[idxSrc] = col[idxDest];
+            col[idxDest] = aux;
+        }
+
+        public static void Reverse<T>(this IList<T> col)
+        {
+            for (int i = 0; i < col.Count / 2; ++i)
+            {
+                col.Swap(i, col.Count -i - 1);
+            }
         }
 
         public class Statistics
@@ -150,10 +158,10 @@ namespace ToolBox
             public double StandardDeviaton { get; set; }
         }
 
-        public static Statistics GetStatistics(this IEnumerable<decimal> values)
+        public static Statistics GetStatistics(this ICollection<decimal> values)
         {
-            decimal min = new decimal(double.PositiveInfinity);
-            decimal max = new decimal(double.NegativeInfinity);
+            var min = new decimal(double.PositiveInfinity);
+            var max = new decimal(double.NegativeInfinity);
             int count = 0;
             decimal acc = 0;
             foreach (var value in values)
@@ -165,7 +173,7 @@ namespace ToolBox
             }
             decimal mean = acc/count;
             decimal variance = 0;
-            Statistics stats = new Statistics
+            var stats = new Statistics
             {
                 Count = count,
                 Max = max,

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Principal;
 using NUnit.Framework;
 using Toolbox.Rbac;
@@ -71,8 +70,8 @@ namespace ToolBox.Test
         public void TestHasRole()
         {
             Assert.IsTrue(_rbac.Is.User(Users["owner"]).A("owner").Result);
-            Assert.IsTrue(_rbac.Is.User(Users["member"]).A("member").Result);
-            Assert.IsTrue(_rbac.Is.User(Users["member"]).A("user").Result);
+            Assert.IsTrue(_rbac.Is.User(Users["member"]).A("Member").Result);
+            Assert.IsTrue(_rbac.Is.User(Users["member"]).A("User").Result);
             Assert.IsFalse(_rbac.Is.User(Users["member"]).A("owner").Result);
             Assert.IsTrue(_rbac.Is.User(Users["user"]).A("user").Result);
             Assert.IsFalse(_rbac.Is.User(Users["user"]).A("member").Result);
@@ -96,20 +95,6 @@ namespace ToolBox.Test
             Assert.IsFalse(_rbac.Can.User(Users["user"]).Do("transfer").Result);
 
             Assert.IsTrue(_rbac.Can.User(Users["Bob"]).Do("Maintnance").Result);
-        }
-
-        [Test]
-        public void TestCanUserDo()
-        {
-            var actions = new [] {"Read", "Transfer", "Delete", "Comment", "Create"};
-            Assert.IsTrue(_rbac.What.Can.User.Do(Users["owner"]).ToList().All(a => actions.Contains(a)));
-        }
-
-        [Test]
-        public void TestCanRoleDo()
-        {
-            var actions = new[] { "Read", "Transfer", "Delete", "Comment", "Create" };
-            Assert.IsTrue(_rbac.What.Can.Role.Do("owner").ToList().All(a => actions.Contains(a)));
         }
     }
 }

@@ -10,7 +10,7 @@ namespace ToolBox
             long length = max - min + 1;
             if (length / 8 > count * 2 * sizeof(int))
             {
-                //if the amount of bytes occupied by the array is greater then the dictionary
+                //if the amount of bytes occupied by the array is greater then the hashset is better
                 return new NonRepeatingListWithSet();
             }
             return new NonRepeatingListWithArray(min, max);

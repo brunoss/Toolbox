@@ -12,34 +12,6 @@ namespace ToolBox.Test
     public class TestNonRepeatingGenerator
     {
         [Test]
-        public void TestLastCountElementsAreNotInIndex0()
-        {
-            for (int i = 0; i < 1000000; ++i)
-            {
-                var list = Sequence.BobFloydNonRepeatingSequence(0, 15, 4).ToList();
-                Assert.IsFalse(new[] {13, 14, 15 }.Contains(list[0]));
-                Assert.AreEqual(4, list.Count);
-            }
-        }
-
-        [Test]
-        public void TestBobFloydBecomesLinear()
-        {
-            var list = Sequence.BobFloydNonRepeatingSequence(0, 15, 16).ToList();
-            for (int i = 0; i < list.Count; ++i)
-            {
-                Assert.AreEqual(i, list[i]);
-            }
-        }
-
-        [Test]
-        public void TestBobFloydRandomness()
-        {
-            TestRandomness(() => Sequence.BobFloydNonRepeatingSequence(8, 15, 4).ToList(), 8, 4);
-        }
-
-
-        [Test]
         public void TestBobFloydWithShuffleRandomness()
         {
             TestRandomness(() => Sequence.NonRepeatingRandomSequence(0, 15, 4).ToList(), 16, 4);

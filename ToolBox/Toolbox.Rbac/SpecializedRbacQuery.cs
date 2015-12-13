@@ -15,7 +15,7 @@ namespace Toolbox.Rbac
 
         private ISpecializedRbacSession Session
         {
-            get { return (ISpecializedRbacSession)session; }
+            get { return (ISpecializedRbacSession)_session; }
         }
 
         public virtual IEnumerable<string> GetUserRoles<T>(IPrincipal user, T resource)
@@ -23,9 +23,9 @@ namespace Toolbox.Rbac
             var userRoles = Session.UserRolesForType.TryGetOrEmpty(typeof(T));
             if (userRoles == null)
             {
-                return base.GetUserRoles(user);
+                return Enumerable.Empty<string>();
             }
-            return base.GetUserRoles(user).Union(userRoles(user, resource));
+            return userRoles(user, resource);
         }
 
         public virtual bool IsUserInRole<T>(IPrincipal user, string role, T resource)
@@ -41,7 +41,7 @@ namespace Toolbox.Rbac
             {
                 return base.GetUserPermissions(user);
             }
-            return userRoles(user, resource).Union(session.Query.GetUserPermissions(user));
+            return userRoles(user, resource).Union(base.GetUserPermissions(user));
         }
 
         public virtual bool IsUserAbleTo<T>(IPrincipal user, string action, T resource)

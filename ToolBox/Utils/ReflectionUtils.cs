@@ -75,7 +75,7 @@ namespace ToolBox
             {
                 string name = mi.GetPropertyName();
                 Debug.Assert(mi.DeclaringType != null);
-                PropertyInfo ret = mi.DeclaringType.GetProperty(name);
+                var ret = mi.DeclaringType.GetProperty(name);
                 return ret;
             }
             return null;
@@ -87,12 +87,12 @@ namespace ToolBox
             {
                 return type.Name;
             }
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             string name = type.Name.Substring(0, type.Name.LastIndexOf('`'));
             builder.Append(name);
             builder.Append('<');
             var names = type.GenericTypeArguments.Select(GetName);
-            builder.Append(String.Join(",", names));
+            builder.Append(string.Join(",", names));
             builder.Append('>');
             return builder.ToString();
         }
@@ -109,7 +109,7 @@ namespace ToolBox
 
         public static T ShallowCopyTo<T>(this T from, T to)
         {
-            Type type = typeof(T);
+            var type = typeof(T);
             foreach (var property in type.GetProperties())
             {
                 if (property.SetMethod != null && property.GetMethod != null)

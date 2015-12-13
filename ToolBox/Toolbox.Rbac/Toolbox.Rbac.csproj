@@ -43,7 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DoubleKeyDictionary.cs" />
     <Compile Include="IRbacQuery.cs" />
     <Compile Include="IRbacSession.cs" />
     <Compile Include="ISpecializedRbacQuery.cs" />

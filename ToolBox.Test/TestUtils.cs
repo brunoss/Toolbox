@@ -14,7 +14,7 @@ namespace ToolBox.Test
             var strings = new[] {"", "a", "ab", "abc", "abcd", "abcdefg"};
             foreach (string s in strings)
             {
-                var aux = new string(s.ToCharArray().Reverse().ToArray());
+                var aux = new string(Enumerable.Reverse(s.ToCharArray()).ToArray());
                 Assert.AreEqual(aux, s.Reverse());
             }
         }
@@ -32,20 +32,20 @@ namespace ToolBox.Test
         public void TestAge()
         {
             var elapsed = _today - _today;
-            Assert.AreEqual(0, elapsed.Years());
-            Assert.AreEqual(0, elapsed.Months());
+            Assert.AreEqual(0, elapsed.Age().Years);
+            Assert.AreEqual(0, elapsed.Age().Months);
 
             elapsed = _today.AddDays(35) - _today;
-            Assert.AreEqual(0, elapsed.Years());
-            Assert.AreEqual(1, elapsed.Months());
+            Assert.AreEqual(0, elapsed.Age().Years);
+            Assert.AreEqual(1, elapsed.Age().Months);
 
             elapsed = _today.AddDays(69) - _today;
-            Assert.AreEqual(0, elapsed.Years());
-            Assert.AreEqual(2, elapsed.Months());
+            Assert.AreEqual(0, elapsed.Age().Years);
+            Assert.AreEqual(2, elapsed.Age().Months);
 
             elapsed = _today.AddDays(369) - _today;
-            Assert.AreEqual(1, elapsed.Years());
-            Assert.AreEqual(0, elapsed.Months());
+            Assert.AreEqual(1, elapsed.Age().Years);
+            Assert.AreEqual(0, elapsed.Age().Months);
         }
     }
 }

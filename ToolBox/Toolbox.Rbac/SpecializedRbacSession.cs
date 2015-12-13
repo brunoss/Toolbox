@@ -17,7 +17,7 @@ namespace Toolbox.Rbac
 
             private SpecializedRbacSession Session
             {
-                get { return (SpecializedRbacSession)session; }
+                get { return (SpecializedRbacSession)_session; }
             }
 
             public override bool IsUserInRole<T>(IPrincipal user, string role, T resource)
@@ -26,19 +26,19 @@ namespace Toolbox.Rbac
                 var assignment = rolesForType?.TryGetOrEmpty(role);
                 if (assignment == null)
                 {
-                    return false;
+                    return base.IsUserInRole(user, role, resource);
                 }
-                return assignment(user, resource);
+                return assignment(user, resource) || base.IsUserInRole(user, role, resource);
             }
         }
         private readonly IDictionary<Type, IDictionary<string, IsUserInRole>> _roleAssignment =
-            new DoubleKeyDictionary<Type, string, IsUserInRole>(null, StringComparer.InvariantCultureIgnoreCase);
+            new Dictionary<Type, IDictionary<string, IsUserInRole>>();
         
         IDictionary<Type, GetUserRoles> ISpecializedRbacSession.UserRolesForType
         {
             get
             {
-                IDictionary<Type, GetUserRoles> userRoles = new Dictionary<Type, GetUserRoles>();
+                var userRoles = new Dictionary<Type, GetUserRoles>();
                 foreach (var assignment in _roleAssignment)
                 {
                     var assignmentContext = assignment;
@@ -54,23 +54,9 @@ namespace Toolbox.Rbac
             }
         }
 
-        public IDictionary<Type, IDictionary<string, IsUserInRole>> RoleAssignment
-        {
-            get { return _roleAssignment; }
-        }
-
         public void AddUserRoleForTypeIf<T>(string role, IsUserInRole predicate)
         {
-            IDictionary<string, IsUserInRole> roleAssign;
-            if (!_roleAssignment.ContainsKey(typeof(T)))
-            {
-                roleAssign = new Dictionary<string, IsUserInRole>();
-                _roleAssignment.Add(typeof(T), roleAssign);
-            }
-            else
-            {
-                roleAssign = _roleAssignment[typeof(T)];
-            }
+            var roleAssign = _roleAssignment.TryGetOrAdd(typeof(T), new Dictionary<string, IsUserInRole>(StringComparer.OrdinalIgnoreCase));
             roleAssign.Add(role, predicate);
         }
 

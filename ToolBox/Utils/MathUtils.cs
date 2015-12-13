@@ -28,8 +28,8 @@ namespace ToolBox
 
         private static bool IsSqrt(BigInteger n, BigInteger root)
         {
-            BigInteger lowerBound = root * root;
-            BigInteger upperBound = (root + 1) * (root + 1);
+            var lowerBound = root * root;
+            var upperBound = (root + 1) * (root + 1);
 
             return (n >= lowerBound && n < upperBound);
         }
@@ -44,7 +44,7 @@ namespace ToolBox
             if (n > 0)
             {
                 int bitLength = (int)Math.Ceiling(BigInteger.Log(n, 2));
-                BigInteger root = BigInteger.One << (bitLength / 2);
+                var root = BigInteger.One << (bitLength / 2);
 
                 while (!IsSqrt(n, root))
                 {

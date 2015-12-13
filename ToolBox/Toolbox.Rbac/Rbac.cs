@@ -38,7 +38,7 @@ namespace Toolbox.Rbac
 
                 public UserRoleResource<T> Of<T>()
                 {
-                    ISpecializedRbacSession session = Session as ISpecializedRbacSession;
+                    var session = Session as ISpecializedRbacSession;
                     if (session == null)
                     {
                         throw new NotSupportedException();
@@ -59,69 +59,27 @@ namespace Toolbox.Rbac
                 }
                 public void If(Func<IPrincipal, T, bool> pred)
                 {
-                    ISpecializedRbacSession session = _userRole.Session as ISpecializedRbacSession;
+                    var session = _userRole.Session as ISpecializedRbacSession;
+                    if (session == null)
+                    {
+                        throw new NotSupportedException();
+                    }
                     session.AddUserRoleForTypeIf<T>(_userRole.Role, (user, resource) => pred(user, (T)resource));
                 }
             }
 
         }
-        
-        public class _What
-        {
-            internal _What(IRbacSession session)
-            {
-                Can = new _Can(session);
-            }
 
-            public _Can Can { get; private set; }
-
-            public class _Can
-            {
-                internal _Can(IRbacSession session)
-                {
-                    Role = new _Role(session);
-                    User = new _User(session);
-                }
-                public _Role Role { get; private set; }
-                public class _Role
-                {
-                    private readonly IRbacSession session;
-                    internal _Role(IRbacSession session)
-                    {
-                        this.session = session;
-                    }
-                    public IEnumerable<string> Do(string role)
-                    {
-                        return session.Query.GetRolePermissions(role);
-                    }
-                }
-                public _User User { get; private set; }
-                public class _User
-                {
-                    private readonly IRbacSession session;
-                    internal _User(IRbacSession session)
-                    {
-                        this.session = session;
-                    }
-                    public IEnumerable<string> Do(IPrincipal principal)
-                    {
-                        return session.Query.GetUserPermissions(principal);
-                    }
-                }
-            }
-
-        }
-        
         public class _Is
         {
-            private readonly IRbacSession session;
+            private readonly IRbacSession _session;
             internal _Is(IRbacSession session)
             {
-                this.session = session;
+                _session = session;
             }
             public Principal User(IPrincipal principal)
             {
-                return new Principal(session, principal);
+                return new Principal(_session, principal);
             }
 
             [Browsable(false)]
@@ -144,23 +102,23 @@ namespace Toolbox.Rbac
                 [EditorBrowsable(EditorBrowsableState.Never)]
                 public class UserRole
                 {
-                    private readonly Principal principal;
-                    private readonly string role;
+                    private readonly Principal _principal;
+                    private readonly string _role;
                     internal UserRole(Principal principal, string role)
                     {
-                        this.principal = principal;
-                        this.role = role;
+                        _principal = principal;
+                        _role = role;
                     }
                     public bool Result { get; set; }
 
                     public bool Of<T>(T resource)
                     {
-                        ISpecializedRbacSession session = principal.Session as ISpecializedRbacSession;
+                        var session = _principal.Session as ISpecializedRbacSession;
                         if (session == null)
                         {
                             throw new NotSupportedException();
                         }
-                        Result = session.Query.IsUserInRole(principal.User, role, resource);
+                        Result = session.Query.IsUserInRole(_principal.User, _role, resource);
                         return Result;
                     }
                 }
@@ -169,14 +127,14 @@ namespace Toolbox.Rbac
         
         public class _Do
         {
-            private readonly IRbacSession session;
+            private readonly IRbacSession _session;
             internal _Do(IRbacSession session)
             {
-                this.session = session;
+                _session = session;
             }
             public _Action A(string name)
             {
-                return new _Action(session, name);
+                return new _Action(_session, name);
             }
             [Browsable(false)]
             [EditorBrowsable(EditorBrowsableState.Never)]
@@ -201,14 +159,14 @@ namespace Toolbox.Rbac
 
         public class _Can
         {
-            private readonly IRbacSession session;
+            private readonly IRbacSession _session;
             internal _Can(IRbacSession session)
             {
-                this.session = session;
+                _session = session;
             }
             public UserAction User(IPrincipal principal = null)
             {
-                return new UserAction(session, principal ?? Thread.CurrentPrincipal);
+                return new UserAction(_session, principal ?? Thread.CurrentPrincipal);
             }
             [Browsable(false)]
             [EditorBrowsable(EditorBrowsableState.Never)]
@@ -224,7 +182,10 @@ namespace Toolbox.Rbac
 
                 public ActionResource Do(string action)
                 {
-                    return new ActionResource(this, action) { Result = Session.Query.IsUserAbleTo(Principal, action) };
+                    return new ActionResource(this, action)
+                    {
+                        Result = Session.Query.IsUserAbleTo(Principal, action)
+                    };
                 }
                 [Browsable(false)]
                 [EditorBrowsable(EditorBrowsableState.Never)]
@@ -242,7 +203,7 @@ namespace Toolbox.Rbac
 
                     public bool The<T>(T resource)
                     {
-                        ISpecializedRbacSession session = _userAction.Session as ISpecializedRbacSession;
+                        var session = _userAction.Session as ISpecializedRbacSession;
                         if (session == null)
                         {
                             throw new NotSupportedException();
@@ -257,13 +218,11 @@ namespace Toolbox.Rbac
         public Rbac(IRbacSession session)
         {
             User = new _User(session);
-            What = new _What(session);
             Is = new _Is(session);
             Do = new _Do(session);
             Can = new _Can(session);
         }
         public _User User { get; private set; }
-        public _What What { get; private set; }
         public _Is Is { get; private set; }
         public _Do Do { get; private set; }
         public _Can Can { get; private set; }
