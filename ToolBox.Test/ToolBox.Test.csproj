@@ -57,13 +57,13 @@
     <Compile Include="TestUtils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Toolbox.Rbac\Toolbox.Rbac.csproj">
+      <Project>{2bae05cf-c06b-467a-8ed1-6f1c7c0023ed}</Project>
+      <Name>Toolbox.Rbac</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ToolBox\ToolBox.csproj">
       <Project>{8330ea9e-fdcc-4c1b-938d-44253f9c686d}</Project>
       <Name>ToolBox</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ToolBox\Toolbox.Rbac\Toolbox.Rbac.csproj">
-      <Project>{2bae05cf-c06b-467a-8ed1-6f1c7c0023ed}</Project>
-      <Name>Toolbox.Rbac</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
