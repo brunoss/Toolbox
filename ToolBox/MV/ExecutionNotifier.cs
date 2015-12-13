@@ -12,7 +12,7 @@ namespace ToolBox.MV
         ICommand Command { get; set; }
     }
 
-    public class CollectionNotEmptyNotifier
+    public static class CollectionNotEmptyNotifier
     {
         public static CollectionNotEmptyNotifier<T> Create<T>(ObservableCollection<T> values)
         {
@@ -23,7 +23,7 @@ namespace ToolBox.MV
     public class CollectionNotEmptyNotifier<T> : ICanExecuteNotifier
     {
         private readonly ObservableCollection<T> _values; 
-        public CollectionNotEmptyNotifier(ObservableCollection<T> values)
+        internal CollectionNotEmptyNotifier(ObservableCollection<T> values)
         {
             _values = values;
             values.CollectionChanged += CollectionOnCollectionChanged;

@@ -56,7 +56,7 @@
     <Compile Include="SpecializedRbacSession.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ToolBox.csproj">
+    <ProjectReference Include="..\ToolBox\ToolBox.csproj">
       <Project>{8330ea9e-fdcc-4c1b-938d-44253f9c686d}</Project>
       <Name>ToolBox</Name>
     </ProjectReference>

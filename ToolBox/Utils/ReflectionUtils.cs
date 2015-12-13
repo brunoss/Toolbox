@@ -9,41 +9,41 @@ namespace ToolBox
 {
     public static class ReflectionUtils
     {
-        private static readonly HashSet<Type> numericTypes;
-        private static readonly HashSet<Type> scalarTypes; 
+        private static readonly HashSet<Type> _NumericTypes;
+        private static readonly HashSet<Type> _ScalarTypes; 
         static ReflectionUtils()
         {
-            numericTypes = new HashSet<Type>();
-            numericTypes.Add(typeof(byte));
-            numericTypes.Add(typeof(sbyte));
-            numericTypes.Add(typeof(short));
-            numericTypes.Add(typeof(ushort));
-            numericTypes.Add(typeof(int));
-            numericTypes.Add(typeof(uint));
-            numericTypes.Add(typeof(long));
-            numericTypes.Add(typeof(ulong));
-            numericTypes.Add(typeof(float));
-            numericTypes.Add(typeof(double));
-            numericTypes.Add(typeof(decimal));
+            _NumericTypes = new HashSet<Type>();
+            _NumericTypes.Add(typeof(byte));
+            _NumericTypes.Add(typeof(sbyte));
+            _NumericTypes.Add(typeof(short));
+            _NumericTypes.Add(typeof(ushort));
+            _NumericTypes.Add(typeof(int));
+            _NumericTypes.Add(typeof(uint));
+            _NumericTypes.Add(typeof(long));
+            _NumericTypes.Add(typeof(ulong));
+            _NumericTypes.Add(typeof(float));
+            _NumericTypes.Add(typeof(double));
+            _NumericTypes.Add(typeof(decimal));
 
-            scalarTypes = new HashSet<Type>(numericTypes);
-            scalarTypes.Add(typeof (byte[]));
-            scalarTypes.Add(typeof(DateTime));
-            scalarTypes.Add(typeof(DateTime?));
-            scalarTypes.Add(typeof(string));
-            scalarTypes.Add(typeof(byte?));
-            scalarTypes.Add(typeof(sbyte?));
-            scalarTypes.Add(typeof(short?));
-            scalarTypes.Add(typeof(ushort?));
-            scalarTypes.Add(typeof(int?));
-            scalarTypes.Add(typeof(uint?));
-            scalarTypes.Add(typeof(long?));
-            scalarTypes.Add(typeof(ulong?));
-            scalarTypes.Add(typeof(float?));
-            scalarTypes.Add(typeof(double?));
-            scalarTypes.Add(typeof(decimal?));
-            scalarTypes.Add(typeof(bool));
-            scalarTypes.Add(typeof(bool?));
+            _ScalarTypes = new HashSet<Type>(_NumericTypes);
+            _ScalarTypes.Add(typeof (byte[]));
+            _ScalarTypes.Add(typeof(DateTime));
+            _ScalarTypes.Add(typeof(DateTime?));
+            _ScalarTypes.Add(typeof(string));
+            _ScalarTypes.Add(typeof(byte?));
+            _ScalarTypes.Add(typeof(sbyte?));
+            _ScalarTypes.Add(typeof(short?));
+            _ScalarTypes.Add(typeof(ushort?));
+            _ScalarTypes.Add(typeof(int?));
+            _ScalarTypes.Add(typeof(uint?));
+            _ScalarTypes.Add(typeof(long?));
+            _ScalarTypes.Add(typeof(ulong?));
+            _ScalarTypes.Add(typeof(float?));
+            _ScalarTypes.Add(typeof(double?));
+            _ScalarTypes.Add(typeof(decimal?));
+            _ScalarTypes.Add(typeof(bool));
+            _ScalarTypes.Add(typeof(bool?));
         }
 
 
@@ -99,12 +99,12 @@ namespace ToolBox
 
         public static bool IsNumeric(this Type type)
         {
-            return numericTypes.Contains(type);
+            return _NumericTypes.Contains(type);
         }
 
         public static bool IsScalar(this Type type)
         {
-            return scalarTypes.Contains(type);
+            return _ScalarTypes.Contains(type);
         }
 
         public static T ShallowCopyTo<T>(this T from, T to)
