@@ -27,14 +27,12 @@ namespace ToolBox.Utils
         {
             foreach (var value in values)
             {
-                if (value.ParentKey == null)
+                var parent = Parent(value);
+                if (parent == null)
                 {
-                    AddAsSubTree(value);
+                    throw new ArgumentException("Couldn't find the parent of element with key " + value.Key);
                 }
-                else
-                {
-                    Parent(value)?.AddAsSubTree(value);
-                }
+                Parent(value)?.AddAsSubTree(value);
             }
         }
 
@@ -43,6 +41,12 @@ namespace ToolBox.Utils
             get { return _items.Values; }
         }
 
+        /// <summary>
+        /// Finds the parent of an item.
+        /// If the item.ParentKey == null then the parent is the self
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public Tree<T> Parent(T item)
         {
             if (item.ParentKey == null)
@@ -108,11 +112,21 @@ namespace ToolBox.Utils
             return children;
         }
 
+        /// <summary>
+        /// Adds the item to its parent
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns>The subtree of the item</returns>
         public Tree<T> Add(T item)
         {
             return Parent(item).AddAsSubTree(item);
         }
 
+        /// <summary>
+        /// Adds the item to its parent
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns>The subtree of the item</returns>
         public Tree<T> Add(T item, int level)
         {
             return Parent(item, level).AddAsSubTree(item);
@@ -122,26 +136,42 @@ namespace ToolBox.Utils
         {
             if (parent._items.Remove(item.Key))
             {
-                item.ParentKey = null;
                 return true;
             }
             return false;
         }
 
+        /// <summary>
+        /// Detaches a sub tree, that is, removes the item and all children.
+        /// Does not update the ParentKey
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public bool RemoveItemAndChildren(T item)
         {
             return RemoveItemAndChildren(Parent(item), item);
         }
 
+        /// <summary>
+        /// Detaches a sub tree, that is, removes the item and all children.
+        /// Does not update the ParentKey
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns>True if the item was sucessfully removed</returns>
         public bool RemoveItemAndChildren(T item, int level)
         {
             return RemoveItemAndChildren(Parent(item, level), item);
         }
-        
+
         private IEnumerable<T> Remove(Tree<T> parent, T item)
         {
+            if (parent == null)
+            {
+                yield break;
+            }
             var children = parent._items[item.Key].Children;
             parent._items.Remove(item.Key);
+            item.ParentKey = null;
             yield return item;
             foreach (var child in children)
             {
@@ -149,13 +179,27 @@ namespace ToolBox.Utils
                 child.Item.ParentKey = item.ParentKey;
                 yield return child.Item;
             }
-        } 
+        }
 
+        /// <summary>
+        /// Removes the item from a tree, moving all children of that item to the parent.
+        /// This method updates the Parentkey of the item children and of the item removed as well
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="item"></param>
+        /// <returns>All modified items</returns>
         public IEnumerable<T> Remove(T item)
         {
             return Remove(Parent(item), item).ToList();
         }
 
+        /// <summary>
+        /// Removes the item from a tree level, moving all children of that item to the parent.
+        /// This method updates the Parentkey of the item children and of the item removed as well
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="item"></param>
+        /// <returns>All modified items</returns>
         public IEnumerable<T> Remove(T item, int level)
         {
             return Remove(Parent(item, level), item).ToList();
