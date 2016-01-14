@@ -6,13 +6,46 @@ using ToolBox;
 
 namespace Toolbox.Rbac
 {
-    public class SimpleRbacQuery : IRbacQuery
+    public class RbacQuery : IRbacQuery
     {
         protected readonly IRbacSession _session;
 
-        public SimpleRbacQuery(IRbacSession session)
+        public RbacQuery(IRbacSession session)
         {
             _session = session;
+        }
+
+
+        public virtual IEnumerable<string> GetUserRoles<T>(IPrincipal user, T resource)
+        {
+            var userRoles = _session.UserRolesForType.TryGetOrEmpty(typeof(T));
+            if (userRoles == null)
+            {
+                return Enumerable.Empty<string>();
+            }
+            return userRoles(user, resource);
+        }
+
+        public virtual bool IsUserInRole<T>(IPrincipal user, string role, T resource)
+        {
+            return user.IsInRole(role) ||
+                GetUserRoles(user, resource).Contains(role, StringComparer.OrdinalIgnoreCase);
+        }
+
+        public virtual IEnumerable<string> GetUserPermissions<T>(IPrincipal user, T resource)
+        {
+            var userRoles = _session.UserRolesForType.TryGetOrEmpty(typeof(T));
+            if (userRoles == null)
+            {
+                return GetUserPermissions(user);
+            }
+            return userRoles(user, resource).Union(GetUserPermissions(user));
+        }
+
+        public virtual bool IsUserAbleTo<T>(IPrincipal user, string action, T resource)
+        {
+            return GetUserRoles(user, resource).Any(r => IsUserInRole(user, r, resource)) ||
+            GetUserPermissions(user, resource).Contains(action, StringComparer.OrdinalIgnoreCase);
         }
 
         public virtual IEnumerable<string> GetUserRoles(IPrincipal user)

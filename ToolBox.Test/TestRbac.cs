@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Principal;
 using NUnit.Framework;
 using Toolbox.Rbac;
@@ -6,8 +7,31 @@ using Toolbox.Rbac;
 namespace ToolBox.Test
 {
     [TestFixture]
-    public class TestSpecializedRbac
+    public class TestRbac
     {
+        public class Principal : IPrincipal, IIdentity
+        {
+            private readonly HashSet<string> _roles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            public IIdentity Identity
+            {
+                get
+                {
+                    return this;
+                }
+            }
+
+            public ICollection<string> Roles { get { return _roles; } }
+
+            public bool IsInRole(string role)
+            {
+                return _roles.Contains(role);
+            }
+
+            public string Name { get; set; }
+            public string AuthenticationType { get; set; }
+            public bool IsAuthenticated { get; set; }
+        }
+
         private Dictionary<string, IPrincipal> _users;
         private Rbac _rbac;
         [SetUp]
@@ -40,7 +64,7 @@ namespace ToolBox.Test
                 Roles = { "owner" }
             });
 
-            _rbac = new Rbac(new SpecializedRbacSession());
+            _rbac = new Rbac(new RbacSession());
             _rbac.Do.A("Delete").Requires("owner");
             _rbac.Do.A("Transfer").Requires("owner");
             _rbac.Do.A("Comment").Requires("member");

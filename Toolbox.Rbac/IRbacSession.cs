@@ -15,5 +15,7 @@ namespace Toolbox.Rbac
         IRbacQuery Query { get; }
         void AddPermission(string roleName, string action);
         void UserIsInRoleIf(string role, Predicate<IPrincipal> predicate);
+        IDictionary<Type, GetUserRoles> UserRolesForType { get; }
+        void AddUserRoleForTypeIf<T>(string role, IsUserInRole predicate);
     }
 }

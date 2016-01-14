@@ -38,11 +38,7 @@ namespace Toolbox.Rbac
 
                 public UserRoleResource<T> Of<T>()
                 {
-                    var session = Session as ISpecializedRbacSession;
-                    if (session == null)
-                    {
-                        throw new NotSupportedException();
-                    }
+                    var session = Session;
                     return new UserRoleResource<T>(this);
                 }
             }
@@ -59,7 +55,7 @@ namespace Toolbox.Rbac
                 }
                 public void If(Func<IPrincipal, T, bool> pred)
                 {
-                    var session = _userRole.Session as ISpecializedRbacSession;
+                    var session = _userRole.Session;
                     if (session == null)
                     {
                         throw new NotSupportedException();
@@ -113,11 +109,7 @@ namespace Toolbox.Rbac
 
                     public bool Of<T>(T resource)
                     {
-                        var session = _principal.Session as ISpecializedRbacSession;
-                        if (session == null)
-                        {
-                            throw new NotSupportedException();
-                        }
+                        var session = _principal.Session;
                         Result = session.Query.IsUserInRole(_principal.User, _role, resource);
                         return Result;
                     }
@@ -203,11 +195,7 @@ namespace Toolbox.Rbac
 
                     public bool The<T>(T resource)
                     {
-                        var session = _userAction.Session as ISpecializedRbacSession;
-                        if (session == null)
-                        {
-                            throw new NotSupportedException();
-                        }
+                        var session = _userAction.Session;
                         Result = session.Query.IsUserAbleTo(_userAction.Principal, _action, resource);
                         return Result;
                     }
