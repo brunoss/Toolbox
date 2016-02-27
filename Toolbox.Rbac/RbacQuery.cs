@@ -15,10 +15,9 @@ namespace Toolbox.Rbac
             _session = session;
         }
 
-
         public virtual IEnumerable<string> GetUserRoles<T>(IPrincipal user, T resource)
         {
-            var userRoles = _session.UserRolesForType.TryGetOrEmpty(typeof(T));
+            var userRoles = _session.UserRolesForType.TryGetOrEmpty(resource.GetType());
             if (userRoles == null)
             {
                 return Enumerable.Empty<string>();
