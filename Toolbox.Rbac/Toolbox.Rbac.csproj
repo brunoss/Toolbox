@@ -46,7 +46,7 @@
     <Compile Include="IRbacQuery.cs" />
     <Compile Include="IRbacSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rbac.cs" />
+    <Compile Include="RbacPrincipal.cs" />
     <Compile Include="Role.cs" />
     <Compile Include="RbacQuery.cs" />
     <Compile Include="RbacSession.cs" />

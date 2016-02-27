@@ -87,6 +87,20 @@ namespace ToolBox
             return idxLast;
         }
 
+        public static LinkedListNode<T> Find<T>(this LinkedList<T> list, Predicate<T> pred)
+        {
+            var node = list.First;
+            while (node != null)
+            {
+                if (pred(node.Value))
+                {
+                    return node;
+                }
+                node = node.Next;
+            }
+            return null;
+        } 
+
         public static IEnumerable<IEnumerable<T>> OrderedGroup<T>(this IEnumerable<T> values, Func<T, IComparable> idSelector)
         {
             using (var it = values.GetEnumerator())
