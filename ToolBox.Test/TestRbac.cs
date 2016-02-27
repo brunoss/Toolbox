@@ -32,92 +32,101 @@ namespace ToolBox.Test
             public bool IsAuthenticated { get; set; }
         }
 
-        private Dictionary<string, IPrincipal> _users;
-        private Rbac _rbac;
+        private RbacPrincipal _owner;
+        private RbacPrincipal _member;
+        private RbacPrincipal _user;
+        private RbacPrincipal _evaluator;
+        private RbacPrincipal _teacher;
+        private RbacPrincipal _bob;
+        private RbacSession _rbac;
         [SetUp]
         public void Init()
         {
-            _users = new Dictionary<string, IPrincipal>();
-            _users.Add("owner", new Principal
+            _rbac = new RbacSession();
+            _rbac.AddPermission("owner", "Delete");
+            _rbac.AddPermission("owner", "Transfer");
+            _rbac.AddPermission("member", "Comment");
+            _rbac.AddPermission("member", "Create");
+            _rbac.AddPermission("user", "Read");
+            _rbac.AddPermission("mantainer", "Maintnance");
+            _rbac.UserIsInRoleIf("mantainer", u => u.Identity.Name == "Bob");
+
+            _rbac.AddPermission("mantainer", "Maintnance");
+            _rbac.AddPermission("Teacher", "Grading");
+            _rbac.AddPermission("Evaluator", "evaluation");
+            _rbac.AddUserRoleForTypeIf<string>("Teacher", (user, resource) => resource == "Hello world");
+
+            _owner = new RbacPrincipal(new Principal
             {
                 Roles = { "owner", "member", "user" }
-            });
-            _users.Add("member", new Principal
+            }, _rbac);
+            _member = new RbacPrincipal(new Principal
             {
                 Roles = { "member", "user" }
-            });
-            _users.Add("user", new Principal
+            }, _rbac);
+            _user = new RbacPrincipal(new Principal
             {
-                Roles = { "user" }
-            });
-            _users.Add("evaluator", new Principal
+                Roles = { "member", "user" }
+            }, _rbac);
+            _evaluator = new RbacPrincipal(new Principal
             {
                 Roles = { "evaluator" }
-            });
-            _users.Add("teacher", new Principal
+            }, _rbac);
+            _teacher = new RbacPrincipal(new Principal
             {
                 Roles = { "teacher" }
-            });
-            _users.Add("Bob", new Principal
+            }, _rbac);
+            _bob = new RbacPrincipal(new Principal
             {
                 Name = "Bob",
                 Roles = { "owner" }
-            });
-
-            _rbac = new Rbac(new RbacSession());
-            _rbac.Do.A("Delete").Requires("owner");
-            _rbac.Do.A("Transfer").Requires("owner");
-            _rbac.Do.A("Comment").Requires("member");
-            _rbac.Do.A("Create").Requires("member");
-            _rbac.Do.A("Read").Requires("user");
-            _rbac.Do.A("Maintnance").Requires("mantainer");
-            _rbac.User.Is("mantainer").If(u => u.Identity.Name == "Bob");
-
-            _rbac.Do.A("Evaluation").Requires("Evaluator");
-            _rbac.Do.A("Grading").Requires("Teacher");
-            _rbac.User.Is("Teacher").Of<string>().If((user, resource) => resource=="Hello world");
+            }, _rbac);
         }
 
 
         [Test]
         public void TestHasRole()
         {
-            Assert.IsTrue(_rbac.Is.User(_users["owner"]).A("owner").Result);
-            Assert.IsTrue(_rbac.Is.User(_users["member"]).A("Member").Result);
-            Assert.IsTrue(_rbac.Is.User(_users["member"]).A("User").Result);
-            Assert.IsFalse(_rbac.Is.User(_users["member"]).A("owner").Result);
-            Assert.IsTrue(_rbac.Is.User(_users["user"]).A("user").Result);
-            Assert.IsFalse(_rbac.Is.User(_users["user"]).A("member").Result);
-            Assert.IsTrue(_rbac.Is.User(_users["Bob"]).A("mantainer").Result);
+            Assert.IsTrue(_owner.Is["owner"]);
+            Assert.IsTrue(_member.Is["member"]);
+            Assert.IsTrue(_member.Is["User"]);
+            Assert.IsFalse(_member.Is["owner"]);
+            Assert.IsTrue(_user.Is["User"]);
+            Assert.IsTrue(_user.Is["member"]);
+            Assert.IsTrue(_bob.Is["mantainer"]);
 
-            Assert.IsTrue(_rbac.Is.User(_users["teacher"]).A("Teacher").Of("the exam"));
-            Assert.IsFalse(_rbac.Is.User(_users["user"]).A("teacher").Of("the exam"));
-            Assert.IsTrue(_rbac.Is.User(_users["user"]).A("Teacher").Of("Hello world"));
+            Assert.IsTrue(_teacher.Is["Teacher","the exam"]);
+            Assert.IsFalse(_user.Is["Teacher", "the exam"]);
+            Assert.IsTrue(_user.Is["Teacher", "Hello world"]);
         }
 
         [Test]
         public void TestCanDo()
         {
-            Assert.IsTrue(_rbac.Can.User(_users["owner"]).Do("Delete").Result);
-            Assert.IsTrue(_rbac.Can.User(_users["owner"]).Do("transfer").Result);
-            Assert.IsTrue(_rbac.Can.User(_users["owner"]).Do("comment").Result);
-            Assert.IsTrue(_rbac.Can.User(_users["owner"]).Do("Create").Result);
-            Assert.IsFalse(_rbac.Can.User(_users["owner"]).Do("Maintnance").Result);
+            Assert.IsTrue(_owner.CanDo["Delete"]);
+            Assert.IsTrue(_owner.CanDo["transfer"]);
+            Assert.IsTrue(_owner.CanDo["comment"]);
+            Assert.IsTrue(_owner.CanDo["Create"]);
+            Assert.IsFalse(_owner.CanDo["Maintnance"]);
+            
+            Assert.IsTrue(_member.CanDo["Create"]);
+            Assert.IsTrue(_member.CanDo["read"]);
 
-            Assert.IsTrue(_rbac.Can.User(_users["member"]).Do("Create").Result);
-            Assert.IsTrue(_rbac.Can.User(_users["member"]).Do("read").Result);
+            Assert.IsTrue(_user.CanDo["Create"]);
+            Assert.IsFalse(_user.CanDo["Delete"]);
+            Assert.IsFalse(_user.CanDo["transfer"]);
 
-            Assert.IsTrue(_rbac.Can.User(_users["user"]).Do("read").Result);
-            Assert.IsFalse(_rbac.Can.User(_users["user"]).Do("Delete").Result);
-            Assert.IsFalse(_rbac.Can.User(_users["user"]).Do("transfer").Result);
+            Assert.IsTrue(_bob.CanDo["Maintnance"]);
+            
+            Assert.IsTrue(_evaluator.CanDo["Evaluation", "anything :p"]);
+            Assert.IsTrue(_evaluator.CanDo["Evaluation", 1]);
+            Assert.IsTrue(_teacher.CanDo["grading", "the exam"]);
+            Assert.IsTrue(_user.CanDo["grading", "Hello world"]); 
+            Assert.IsFalse(_user.CanDo["grading", "protected resource to other user"]);
 
-            Assert.IsTrue(_rbac.Can.User(_users["Bob"]).Do("Maintnance").Result);
-
-            Assert.IsTrue(_rbac.Can.User(_users["evaluator"]).Do("Evaluation").The("anything :p"));
-            Assert.IsTrue(_rbac.Can.User(_users["evaluator"]).Do("Evaluation").The(1));
-            Assert.IsTrue(_rbac.Can.User(_users["teacher"]).Do("grading").The("the exam"));
-            Assert.IsTrue(_rbac.Can.User(_users["user"]).Do("grading").The("Hello world"));
-            Assert.IsFalse(_rbac.Can.User(_users["user"]).Do("grading").The("protected resource to other user"));
+            Assert.IsFalse(_user.CanDo["Delete"]);
+            Assert.IsFalse(_user.CanDo["transfer"]);
+            Assert.IsTrue(_user.CanDo["Create"]);
         }
     }
 }
